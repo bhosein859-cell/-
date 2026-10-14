@@ -1,0 +1,63 @@
+# ساخت خودکار فایل نصبی گره‌گشا در گیت‌هاب — بدون نیاز به نصب محلی
+# خروجی: فایل GerehGosha-1.0.0.apk در بخش Artifacts هر اجرا
+name: ساخت فایل نصبی اندروید
+
+on:
+  workflow_dispatch:   # اجرای دستی از تب Actions
+  push:
+    branches:
+      - main
+      - 'arena/**'     # اجازه‌ی ساخت روی شاخه‌های کاری
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: نمایش نسخه‌ی فلاتر
+        run: flutter --version
+
+      - name: ساخت اسکلت اندروید
+        run: flutter create --platforms=android --org ir.bakhtiari --project-name gereh_gosha .
+
+      - name: تنظیم نام فارسی و مجوز میکروفون
+        run: |
+          M=android/app/src/main/AndroidManifest.xml
+          sed -i 's/android:label="gereh_gosha"/android:label="گره‌گشا"/' $M
+          sed -i 's|<application|<uses-permission android:name="android.permission.RECORD_AUDIO"/>\\n    <application|' $M
+          grep -n "RECORD_AUDIO\|android:label" $M || true
+
+      - name: فعال‌سازی core library desugaring (نیاز برخی افزونه‌ها)
+        run: python3 tool/ci_patch_android.py
+
+      - name: دریافت وابستگی‌ها
+        run: flutter pub get
+
+      - name: ساخت آیکون اپ
+        run: dart run flutter_launcher_icons
+
+      - name: ساخت نسخه‌ی انتشار
+        run: flutter build apk --release
+
+      - name: تغییر نام خروجی
+        run: |
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-release.apk dist/GerehGosha-1.0.0.apk
+          ls -lh dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GerehGosha-1.0.0
+          path: dist/GerehGosha-1.0.0.apk
+          if-no-files-found: error

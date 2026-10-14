@@ -1,0 +1,120 @@
+name: gereh_gosha
+description: >-
+  گره‌گشا — نرم‌افزار آفلاین حل مسئله سه‌سطحی (Quick Fix / تیمی / استراتژیک)
+  با ابزارهای هوشمند، امنیت و خروجی‌های حرفه‌ای.
+  ساخته شده با افتخار توسط حسین بختیاری.
+publish_to: 'none'
+version: 1.0.0+100
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # لوکالیزیشن فارسی و راست‌به‌چپ
+  flutter_localizations:
+    sdk: flutter
+
+  # ── مدیریت حالت (State Management) ─────────────────────────────
+  flutter_riverpod: ^2.5.1
+
+  # ── دیتابیس محلی آفلاین (SQLite) ───────────────────────────────
+  sqflite: ^2.3.3+1            # درایور اندروید
+  sqflite_common_ffi: ^2.3.3   # درایور ویندوز/لینوکس/مک
+  sqlite3_flutter_libs: ^0.5.24 # کتابخانه بومی sqlite برای دسکتاپ
+  path: ^1.9.0
+  path_provider: ^2.1.4
+
+  # ── ذخیره تنظیمات (تم، زبان) ───────────────────────────────────
+  shared_preferences: ^2.3.2
+
+  # ── فایل پروژه .psp (آرشیو ZIP) ────────────────────────────────
+  archive: ^3.6.1
+  file_picker: ^8.1.2
+
+  # ── تاریخ/اعداد فارسی ──────────────────────────────────────────
+  # نسخه توسط flutter_localizations قفل می‌شود؛ هیچ نسخه‌ی ثابتی اینجا نزنید.
+  intl: any
+
+  # ── نمایش لوگوی SVG ─────────────────────────────────────────────
+  flutter_svg: ^2.0.10+1
+
+  # ── دوربین (اندروید) و انتخاب تصویر (ویندوز) برای پیوست مرحله ۱ ──
+  image_picker: ^1.1.2
+
+  # ── فاز ۲: نمودارهای تعاملی (پارتو، میله‌ای قبل/بعد) ──
+  fl_chart: ^0.70.0
+  # خروجی بایگانی PDF سطح ۳ (هر صفحه به‌صورت تصویر با شکل‌دهی صحیح فارسی)
+  pdf: ^3.10.8
+
+  # ── فاز ۲: خروجی Excel چهارشیته (خالص Dart، آفلاین) ──
+  excel: ^4.0.6
+
+  # ── اطلاعات نسخه (صفحه درباره ما) ───────────────────────────────
+  package_info_plus: ^8.0.2
+
+  # ═══ فاز ۴: ویژگی‌های هوشمند ═══
+  # تشخیص گفتار (تایپ صوتی با موتور سیستم‌عامل؛ قابل پیکربندی آفلاین)
+  speech_to_text: ^7.0.0
+
+  # ═══ فاز ۵: اشتراک‌گذاری و امنیت ═══
+  # رمزنگاری AES-256 برای فایل‌های .psp + هش رمز عبور
+  encrypt: ^5.0.3
+  crypto: ^3.0.3
+  # کد QR برای انتقال سریع فایل پروژه
+  qr_flutter: ^4.1.0
+  # اشتراک بومی (واتس‌اپ/ایمیل/بلوتوث اندروید + ویندوز)
+  share_plus: ^10.0.2
+  # نوتیفیکیشن محلی یادآورها (نیازمند پیکربندی بومی؛ راهنما در مستندات)
+  flutter_local_notifications: ^17.2.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  # تولید آیکون اپ برای اندروید و ویندوز از روی لوگو
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Vazirmatn
+      fonts:
+        - asset: assets/fonts/Vazirmatn-Regular.ttf
+        - asset: assets/fonts/Vazirmatn-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Vazirmatn-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Vazirmatn-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Vazirmatn-Black.ttf
+          weight: 900
+
+# ── پیکربندی آیکون اپلیکیشن (اجرا: dart run flutter_launcher_icons) ──
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/images/logo.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/logo.png"
+  windows:
+    generate: true
+    image_path: "assets/images/logo.png"
+    icon_size: 256
+
+# ── فایل نصبی ویندوز (اجرا: dart run msix:create) ──
+# برای نصب‌کننده‌ی سنتی .exe از Inno Setup استفاده کنید؛ اسکریپت در
+# مستندات انتشار (docs/RELEASE.md) آمده است.
+msix:
+  display_name: گره‌گشا
+  publisher_display_name: Hossein Bakhtiari
+  identity_name: ir.bakhtiari.gerehgosha
+  logo_path: assets/images/logo.png
+  capabilities: internetClient
+  languages: fa
+  file_extension: .psp
