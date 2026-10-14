@@ -9,13 +9,16 @@ on:
       - main
       - 'arena/**'     # اجازه‌ی ساخت روی شاخه‌های کاری
 
+permissions:
+  contents: write
+
 jobs:
   build-apk:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -31,24 +34,62 @@ jobs:
       - name: ساخت اسکلت اندروید
         run: flutter create --platforms=android --org ir.bakhtiari --project-name gereh_gosha .
 
-      - name: تنظیم نام فارسی و مجوز میکروفون
-        run: |
-          M=android/app/src/main/AndroidManifest.xml
-          sed -i 's/android:label="gereh_gosha"/android:label="گره‌گشا"/' $M
-          sed -i 's|<application|<uses-permission android:name="android.permission.RECORD_AUDIO"/>\\n    <application|' $M
-          grep -n "RECORD_AUDIO\|android:label" $M || true
-
-      - name: فعال‌سازی core library desugaring (نیاز برخی افزونه‌ها)
+      - name: تنظیم مانیفست و Gradle اندروید
         run: python3 tool/ci_patch_android.py
 
       - name: دریافت وابستگی‌ها
         run: flutter pub get
 
+      - name: بررسی ایستای کد (فقط گزارش)
+        run: |
+          set +e
+          flutter analyze --no-fatal-infos > analyze.log 2>&1
+          echo "exit=$?"
+          tail -n 40 analyze.log >> $GITHUB_STEP_SUMMARY
+
       - name: ساخت آیکون اپ
         run: dart run flutter_launcher_icons
 
       - name: ساخت نسخه‌ی انتشار
-        run: flutter build apk --release
+        run: |
+          set -o pipefail
+          flutter build apk --release 2>&1 | tee build.log
+
+      - name: گزارش خطا (در صورت شکست)
+        if: failure()
+        run: |
+          set +e
+          LOG=$(ls -1 build.log analyze.log 2>/dev/null)
+          for f in $LOG; do
+            echo "### $f — ۸۰ خط آخر" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            tail -n 80 "$f" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          done
+          if [ -f build.log ]; then
+            MSG=$(tail -n 80 build.log | sed -e 's/%/%25/g' -e ':a;N;$!ba;s/\n/%0A/g' | cut -c1-20000)
+            echo "::error title=خطای ساخت APK::${MSG}"
+          fi
+          if [ -f build.log ]; then
+            python3 - <<'PY' || true
+          import json, os, urllib.request
+          body = "```\n" + "\n".join(open("build.log", encoding="utf-8", errors="replace").read().splitlines()[-400:]) + "\n```"
+          body = body[:65000]
+          req = urllib.request.Request(
+              f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/commits/{os.environ['GITHUB_SHA']}/comments",
+              data=json.dumps({"body": body}).encode(),
+              headers={
+                  "Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
+                  "Accept": "application/vnd.github+json",
+                  "Content-Type": "application/json",
+                  "User-Agent": "ci",
+              },
+              method="POST",
+          )
+          with urllib.request.urlopen(req) as r:
+              print("commit comment:", r.status)
+          PY
+          fi
 
       - name: تغییر نام خروجی
         run: |
