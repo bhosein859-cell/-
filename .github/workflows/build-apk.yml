@@ -134,3 +134,28 @@ jobs:
           name: GerehGosha-1.0.0
           path: dist/GerehGosha-1.0.0.apk
           if-no-files-found: error
+
+      - name: انتشار در Releases (لینک دانلود مستقیم)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: گره‌گشا ۱٫۰٫۰
+          body: |
+            فایل نصبی اندروید «گره‌گشا ۱٫۰٫۰» — ساخته‌شده به‌صورت خودکار روی GitHub Actions.
+
+            راهنمای نصب: فایل APK را روی گوشی باز کنید، اگر لازم شد در تنظیمات،
+            «نصب از منابع نامعلوم» را برای مرورگر یا فایل‌منیجر فعال کنید.
+          files: dist/GerehGosha-1.0.0.apk
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: کپی APK روی شاخهٔ apk-build (برای دانلود بدون ورود)
+        continue-on-error: true
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "GitHub Actions"
+          cp dist/GerehGosha-1.0.0.apk ./GerehGosha-1.0.0.apk
+          git add -f GerehGosha-1.0.0.apk
+          git commit -m "APK نسخهٔ ۱٫۰٫۰ (ساخت خودکار)"
+          git push --force origin HEAD:refs/heads/apk-build
