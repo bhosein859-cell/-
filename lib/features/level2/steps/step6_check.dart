@@ -157,7 +157,9 @@ class Step6Check extends ConsumerWidget {
                     show: true,
                     drawVerticalLine: false,
                     getDrawingHorizontalLine: (v) =>
-                        BorderSide(color: theme.dividerColor.withValues(alpha: .4))),
+                        FlLine(
+                          color: theme.dividerColor.withValues(alpha: .4),
+                          strokeWidth: .5)),
               ),
             ),
           ),

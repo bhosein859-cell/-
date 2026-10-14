@@ -76,7 +76,7 @@ class PdfReportBuilder {
       for (final t in state.team)
         ('عضو تیم', '${t.name} — ${TeamRoleL3.fa[t.role] ?? t.role}'),
       for (final k in state.kpis)
-        ('شاخص پایه', '${k.name}: ${fa(k.value.toStringAsFixed(2))} ${k.unit}'),
+        ('شاخص پایه', '${k.name}: ${fa((k.baseline ?? 0).toStringAsFixed(2))} ${k.unit}'),
     ]);
 
     final containment = _PageContent(title: 'اقدامات مهار و آمار', rows: [
@@ -215,7 +215,7 @@ class _PagePainter extends CustomPainter {
             ..strokeWidth = 1);
 
       labelTp.paint(canvas, Offset(size.width - labelTp.width - 36, y));
-      valueTp.paint(canvas, const Offset(36, y));
+      valueTp.paint(canvas, Offset(36, y));
       y += rowH;
     }
 

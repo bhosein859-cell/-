@@ -292,7 +292,7 @@ class _FishboneWidgetState extends ConsumerState<FishboneWidget> {
             ),
             onLongPressMoveUpdate: (details) {
               if (_dragId != null) {
-                setState(() => _dragOffset = details.localOffsetFromOrigin * 0.35);
+                setState(() => _dragOffset = details.localPosition * 0.35);
               }
             },
             onLongPressEnd: (details) async {
@@ -302,7 +302,7 @@ class _FishboneWidgetState extends ConsumerState<FishboneWidget> {
                 _dragOffset = Offset.zero;
               });
               if (id == null) return;
-              final dx = details.localOffsetFromOrigin.dx;
+              final dx = details.localPosition.dx;
               if (dx.abs() > 50) {
                 final node = state.fishbone.firstWhere((n) => n.id == id);
                 final newIndex = node.sortOrder + (dx < -50 ? 1 : -1);

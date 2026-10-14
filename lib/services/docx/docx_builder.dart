@@ -181,7 +181,7 @@ ${_body.toString()}
 
     final bytes = ZipEncoder().encode(archive);
     if (bytes == null) throw StateError('خطا در ساخت بسته‌ی docx');
-    return bytes;
+    return Uint8List.fromList(bytes);
   }
 
   ArchiveFile _entry(String name, String content) {

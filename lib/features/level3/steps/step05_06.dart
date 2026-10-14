@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../level2/widgets/fishbone_widget.dart' show FishbonePainter;
+import '../../../core/theme/app_colors.dart';
+import '../../level2/widgets/fishbone_widget.dart' show FishbonePainter;
 import '../level3_provider.dart';
 import '../widgets/decision_widgets.dart';
 

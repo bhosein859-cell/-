@@ -242,7 +242,7 @@ class WordReportL3 {
         ['تاریخ', 'قبل', 'بعد', 'یادداشت'],
         for (final p in state.pilots)
           [p.date.toIso8601String().substring(0, 10), fa(p.before.toStringAsFixed(2)),
-            fa(p.after.toStringAsFixed(2)), p.statNote],
+            fa(p.after.toStringAsFixed(2)), p.statNote ?? ''],
       ]);
       final w = Stats.welchT(
           state.pilots.map((p) => p.before).toList(),

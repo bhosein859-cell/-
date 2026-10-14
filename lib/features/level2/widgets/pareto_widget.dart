@@ -74,8 +74,9 @@ class _ParetoWidgetState extends ConsumerState<ParetoWidget> {
                     gridData: FlGridData(
                       show: true,
                       drawVerticalLine: false,
-                      getDrawingHorizontalLine: (v) => BorderSide(
-                          color: theme.dividerColor.withValues(alpha: .4)),
+                      getDrawingHorizontalLine: (v) => FlLine(
+                          color: theme.dividerColor.withValues(alpha: .4),
+                          strokeWidth: .5),
                     ),
                     titlesData: FlTitlesData(
                       topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),

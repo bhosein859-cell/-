@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/theme/app_colors.dart';
-import '../../core/utils/persian_utils.dart';
-import '../../core/utils/statistics.dart';
-import '../../data/models/level3_models.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/persian_utils.dart';
+import '../../../core/utils/statistics.dart';
+import '../../../data/models/level3_models.dart';
 import '../level3_provider.dart';
 import '../level3_state.dart';
 
@@ -93,7 +93,7 @@ class _Step7ScreenState extends ConsumerState<Step7Screen> {
             leading: const Icon(Icons.science, size: 18),
             title: Text('${PersianUtils.faDigits(p.before.toStringAsFixed(2))} ← '
                 '${PersianUtils.faDigits(p.after.toStringAsFixed(2))}'
-                ' (${p.statNote.isEmpty ? 'بدون یادداشت' : p.statNote})'),
+                ' (${(p.statNote ?? '').isEmpty ? 'بدون یادداشت' : p.statNote})'),
             subtitle: Text(p.date.toIso8601String().substring(0, 10)),
             trailing: Icon(
               p.after < p.before ? Icons.trending_down : Icons.trending_up,

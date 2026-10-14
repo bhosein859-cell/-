@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/utils/persian_utils.dart';
+import '../../../core/utils/persian_utils.dart';
 import '../level3_provider.dart';
 
 /// گام ۹ — پیاده‌سازی کامل: سوابق آموزش + تخصیص منابع

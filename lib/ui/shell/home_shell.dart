@@ -116,7 +116,7 @@ class _HomeShellState extends State<HomeShell> {
           bottomNavigationBar: NavigationBar(
             selectedIndex: _selectedIndex,
             onDestinationSelected: _select,
-            labelBehavior: NavigationDestinationLabelBehavior.onlySelected,
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             destinations: [
               for (final item in _items)
                 NavigationDestination(

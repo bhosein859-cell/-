@@ -65,11 +65,7 @@ class _StatAnalysisPanelState extends ConsumerState<StatAnalysisPanel> {
       for (final row in sheet.rows.skip(1)) {
         final nums = <double>[];
         for (final cell in row) {
-          // مقدار خام سلول از پوشش CellValue استخراج می‌شود
-          final raw = cell?.value?.value;
-          final d = raw is num
-              ? raw.toDouble()
-              : (raw is String ? double.tryParse(raw.trim()) : null);
+          final d = _cellAsDouble(cell);
           if (d != null) nums.add(d);
         }
         if (nums.isNotEmpty) xs.add(nums[0]);
@@ -528,4 +524,19 @@ class BoxPlotPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant BoxPlotPainter old) => old.data != data;
+}
+
+/// خواندن مقدار عددی یک سلول اکسل با تحمل تفاوت نسخه‌های بسته‌ی excel.
+/// (در برخی نسخه‌ها `CellValue.value` رشته و در برخی TextSpan است.)
+double? _cellAsDouble(xl.Data? cell) {
+  final cv = cell?.value;
+  if (cv == null) return null;
+  try {
+    final dynamic v = (cv as dynamic).value;
+    if (v is num) return v.toDouble();
+    if (v is String) return double.tryParse(v.trim());
+    final dynamic plain = (v as dynamic).toPlainText?.call();
+    if (plain is String) return double.tryParse(plain.trim());
+  } catch (_) {}
+  return null;
 }

@@ -23,7 +23,8 @@ double _drawTitle(Canvas canvas, String text, Size size) {
 void _drawLabel(Canvas canvas, String text, double x, double y,
     {int size = 10, Color color = const Color(0xFF475569)}) {
   final tp = TextPainter(
-    text: TextSpan(text,
+    text: TextSpan(
+        text: text,
         style: TextStyle(fontFamily: 'Vazirmatn', fontSize: size.toDouble(), color: color)),
     textDirection: TextDirection.rtl,
   )..layout();

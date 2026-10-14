@@ -294,6 +294,9 @@ class CopqRow {
 
   double get saving => before - after;
 
+  /// نام فارسی دسته‌ی COPQ
+  String get faCategory => faCategories[category] ?? category;
+
   factory CopqRow.fromMap(Map<String, dynamic> m) => CopqRow(
         id: m['id'] as int?,
         problemId: m['problem_id'] as int,
@@ -326,6 +329,9 @@ class LessonLearned {
   final String lesson;
   final String category; // technical | team | process | management
   final DateTime? createdAt;
+
+  /// نام فارسی دسته‌ی درس‌آموخته
+  String get categoryFa => faCategories[category] ?? category;
 
   static const Map<String, String> faCategories = {
     'technical': 'فنی',

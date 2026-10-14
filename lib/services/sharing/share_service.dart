@@ -35,7 +35,7 @@ class ShareService {
 
   /// رندر تصویر QR (مثلاً برای ذخیره/نمایش)
   static Future<Uint8List> renderQrPng(String data, {double size = 320}) async {
-    final painter = QrPainter.withData(
+    final painter = QrPainter(
       data: data,
       version: QrVersions.auto,
       gapless: true,

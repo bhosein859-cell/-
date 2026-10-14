@@ -63,7 +63,7 @@ class _Step1ProblemFormState extends ConsumerState<Step1ProblemForm> {
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.w800)),
               const SizedBox(height: 8),
-              TextField(
+              TextFormField(
                 initialValue: state.title,
                 onChanged: (v) => notifier.update((s) => s.copyWith(title: v)),
                 textInputAction: TextInputAction.next,
@@ -79,7 +79,7 @@ class _Step1ProblemFormState extends ConsumerState<Step1ProblemForm> {
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.w800)),
               const SizedBox(height: 8),
-              TextField(
+              TextFormField(
                 initialValue: state.description,
                 onChanged: (v) =>
                     notifier.update((s) => s.copyWith(description: v)),
@@ -93,7 +93,7 @@ class _Step1ProblemFormState extends ConsumerState<Step1ProblemForm> {
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.w800)),
               const SizedBox(height: 8),
-              TextField(
+              TextFormField(
                 initialValue: state.location,
                 onChanged: (v) =>
                     notifier.update((s) => s.copyWith(location: v)),
