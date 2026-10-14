@@ -5,6 +5,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/utils/persian_utils.dart';
 import '../../data/database/database_helper.dart';
 import '../../services/reminder_service.dart';
+import '../../providers/app_providers.dart' show databaseProvider;
 
 /// ═══════════════════════════════════════════════════════════════
 /// اتاق فرمان (Command Center) — نمای کلان تمام پروژه‌های فعال

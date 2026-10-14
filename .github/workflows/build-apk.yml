@@ -45,12 +45,21 @@ jobs:
           set +e
           flutter analyze --no-fatal-infos > analyze.log 2>&1
           echo "analyze_exit=$?"
-          echo "### flutter analyze" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          grep -E "^\s+(error|warning) " analyze.log | head -n 200 >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          MSG=$(grep -E "^\s+error " analyze.log | sed -e 's/%/%25/g' | tail -n 300 | cut -c1-50000 | tr '\n' '~' )
-          echo "::warning title=تحلیل ایستا (خطاها)::${MSG}"
+          grep -E "^\s+error " analyze.log | sed -e 's/%/%25/g' > errors.txt
+          echo "error_lines=$(wc -l < errors.txt)"
+          rm -f chunk_*
+          if [ -s errors.txt ]; then
+            split -b 4000 -d -a 1 errors.txt chunk_
+          fi
+          n=0
+          for c in chunk_*; do
+            [ -f "$c" ] || continue
+            n=$((n+1))
+            MSG=$(tr '\n' '~' < "$c")
+            echo "::warning title=خطاهای تحلیل ایستا ($n)::${MSG}"
+            cat "$c" | sed 's/~/\n/g'
+            echo "---------------------------------------"
+          done
 
       - name: ساخت آیکون اپ
         run: dart run flutter_launcher_icons
@@ -78,9 +87,25 @@ jobs:
             echo "::notice title=نسخه‌ها::${DEPS}"
           fi
           if [ -f build.log ]; then
-            # کل بخش خطاهای کامپایلر (انتهای لاگ) را گزارش کن
-            MSG=$(tail -c 55000 build.log | sed -e 's/%/%25/g' -e ':a;N;$!ba;s/\n/%0A/g')
-            echo "::error title=خطای ساخت APK::${MSG}"
+            # فقط خطوط خطا/شکست — بدون نویزِ دانلود و آنزیپ
+            grep -nE "\.dart:[0-9]+:[0-9]+: (Error|Warning)|^Error:|What went wrong|FAILURE:|Caused by|error: |Unhandled exception|Target .* failed" build.log \
+              | sed -e 's/%/%25/g' > builderr.txt
+            echo "build_error_lines=$(wc -l < builderr.txt)"
+            rm -f bchunk_*
+            if [ -s builderr.txt ]; then
+              split -b 4000 -d -a 1 builderr.txt bchunk_
+            fi
+            n=0
+            for c in bchunk_*; do
+              [ -f "$c" ] || continue
+              n=$((n+1))
+              MSG=$(tr '\n' '~' < "$c")
+              echo "::error title=خطای ساخت APK ($n)::${MSG}"
+            done
+            echo "### خطوط خطای build.log" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            head -n 120 builderr.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: تغییر نام خروجی

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import '../../data/database/database_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/app_providers.dart' show databaseProvider;
 
 /// ═══════════════════════════════════════════════════════════════
 /// موتور هوش مصنوعی آفلاین گره‌گشا (On-Device AI)

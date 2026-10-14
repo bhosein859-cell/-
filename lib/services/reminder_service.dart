@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/database/database_helper.dart';
+import '../providers/app_providers.dart' show databaseProvider;
 
 /// ═══════════════════════════════════════════════════════════════
 /// یادآور هوشمند — شناسایی اقدامات عقب‌افتاده بر اساس اولویت

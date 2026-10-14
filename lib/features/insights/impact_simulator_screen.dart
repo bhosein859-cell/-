@@ -139,8 +139,9 @@ class _ImpactSimulatorScreenState extends State<ImpactSimulatorScreen> {
                         ),
                         borderData: FlBorderData(show: false),
                         gridData: FlGridData(
-                          getDrawingHorizontalLine: (v) => BorderSide(
-                              color: AppColors.navyBlue.withValues(alpha: .08)),
+                          getDrawingHorizontalLine: (v) => FlLine(
+                              color: AppColors.navyBlue.withValues(alpha: .08),
+                              strokeWidth: .5),
                         ),
                       ),
                     ),

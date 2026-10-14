@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 /// توابع کمکی مشترک برای تبدیل ردیف‌های دیتابیس به مدل‌ها.
-library;
 
 /// تبدیل متن تاریخ ذخیره‌شده در دیتابیس به [DateTime].
 DateTime? parseDbDate(dynamic value) =>

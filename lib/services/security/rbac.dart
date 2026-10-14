@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/database/database_helper.dart';
+import '../../providers/app_providers.dart' show databaseProvider;
 
 /// ═══════════════════════════════════════════════════════════════
 /// سطوح دسترسی مبتنی بر نقش (RBAC) — آفلاین و محلی

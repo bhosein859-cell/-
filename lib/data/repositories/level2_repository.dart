@@ -6,6 +6,7 @@ import '../models/fishbone_node.dart';
 import '../models/gantt_task.dart';
 import '../models/pareto_entry.dart';
 import 'problem_repository.dart';
+import '../../providers/app_providers.dart' show databaseProvider;
 
 /// مخزن داده‌ی سطح ۲ — CRUD سه جدول جدید + تاریخچه.
 class Level2Repository {

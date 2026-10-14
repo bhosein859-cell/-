@@ -14,6 +14,7 @@ import 'impact_simulator_screen.dart';
 import 'problem_dna_screen.dart';
 import 'templates_screen.dart';
 import 'time_machine_screen.dart';
+import '../../providers/app_providers.dart' show databaseProvider;
 
 /// ═══════════════════════════════════════════════════════════════
 /// هاب «ابزارهای هوشمند» — دروازه‌ی ورود به تمام قابلیت‌های فاز ۴

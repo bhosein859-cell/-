@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../database/database_helper.dart';
 import '../models/level3_models.dart';
 import 'problem_repository.dart';
+import '../../providers/app_providers.dart' show databaseProvider;
 
 /// مخزن داده‌ی سطح ۳ — CRUD هفت جدول جدید.
 class Level3Repository {

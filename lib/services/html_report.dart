@@ -5,6 +5,7 @@ import 'package:path/path.dart' as p;
 
 import '../data/database/database_helper.dart';
 import 'downloads_resolver.dart';
+import '../providers/app_providers.dart' show databaseProvider;
 
 /// ═══════════════════════════════════════════════════════════════
 /// خروجی HTML تعاملی — وب‌سایت تک‌فایلی و کاملاً آفلاین

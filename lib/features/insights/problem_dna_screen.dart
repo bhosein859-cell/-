@@ -7,6 +7,7 @@ import '../../core/ai/ai_engine.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/persian_utils.dart';
 import '../../data/database/database_helper.dart';
+import '../../providers/app_providers.dart' show databaseProvider;
 
 /// ═══════════════════════════════════════════════════════════════
 /// دی‌ان‌ای مسئله (Problem DNA)

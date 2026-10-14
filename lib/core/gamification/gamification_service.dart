@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/database/database_helper.dart';
+import '../../providers/app_providers.dart' show databaseProvider;
 
 /// ═══════════════════════════════════════════════════════════════
 /// گیمیفیکیشن گره‌گشا — امتیازدهی، نشان‌های دیجیتال و جدول رتبه‌بندی

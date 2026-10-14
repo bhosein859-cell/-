@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/database/database_helper.dart';
 import '../data/models/problem.dart';
 import '../data/repositories/problem_repository.dart';
+import '../providers/app_providers.dart' show databaseProvider;
 
 /// ═══════════════════════════════════════════════════════════════
 /// کپی از پروژه به عنوان قالب — ساختار و ابزارها منتقل می‌شوند
