@@ -9,7 +9,7 @@ import '../core/utils/statistics.dart';
 double _drawTitle(Canvas canvas, String text, Size size) {
   final tp = TextPainter(
     text: TextSpan(
-      text,
+      text: text,
       style: const TextStyle(
           fontFamily: 'Vazirmatn', fontSize: 15, fontWeight: FontWeight.w800,
           color: Color(0xFF1E3A8A)),

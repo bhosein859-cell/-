@@ -327,7 +327,7 @@ class _Step2ScreenState extends ConsumerState<Step2Screen> {
                         'اثربخشی اقدامات مهار توسط مدیر تایید شد ✓ — می‌توانید ادامه دهید.',
                         style: TextStyle(
                             fontWeight: FontWeight.w800,
-                            color: AppColors.success.shade700),
+                            color: AppColors.success),
                       ),
                     ),
                   ],
