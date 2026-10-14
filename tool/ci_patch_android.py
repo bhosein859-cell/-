@@ -86,6 +86,46 @@ def patch_kotlin(path: pathlib.Path) -> bool:
     return True
 
 
+INIT_SCRIPT = """// هم‌ترازیِ compileSdk همه‌ی زیرپروژه‌ها (افزونه‌ها) با اپ
+// رفع خطای: ':file_picker:checkReleaseAarMetadata' — «requires ... 36 or later»
+gradle.allprojects { project ->
+    project.afterEvaluate {
+        def ext = project.extensions.findByName('android')
+        if (ext == null) {
+            return
+        }
+        def current = null
+        try {
+            current = ext.compileSdkVersion
+        } catch (Throwable ignored) {
+        }
+        try {
+            ext.compileSdkVersion(36)
+            println "[ci-patch] compileSdk=36 برای ${project.name}"
+        } catch (Throwable e1) {
+            try {
+                ext.compileSdk = 36
+                println "[ci-patch] compileSdk=36 برای ${project.name} (property)"
+            } catch (Throwable e2) {
+                println "[ci-patch] نتوانستم compileSdk را برای ${project.name} تنظیم کنم: ${e2}"
+            }
+        }
+    }
+}
+"""
+
+
+def write_gradle_init_script() -> None:
+    """اسکریپت init گِردل را در GRADLE_USER_HOME/init.d می‌نویسد (زبان‌مستقل)."""
+    import os
+
+    gradle_home = os.environ.get("GRADLE_USER_HOME") or str(pathlib.Path.home() / ".gradle")
+    target = pathlib.Path(gradle_home) / "init.d" / "ci-align-compilesdk.gradle"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(INIT_SCRIPT, encoding="utf-8")
+    print(f"[+] اسکریپت init نوشته شد: {target}")
+
+
 def drop_template_test() -> None:
     """تست قالبیِ `flutter create` (که به کلاس MyApp اشاره می‌کند) را حذف می‌کند."""
     tmpl = pathlib.Path("test/widget_test.dart")
@@ -99,6 +139,7 @@ def main() -> int:
         return 1
 
     drop_template_test()
+    write_gradle_init_script()
 
     done = False
     for path, patcher in ((APP_DIR / "build.gradle.kts", patch_kotlin), (APP_DIR / "build.gradle", patch_groovy)):

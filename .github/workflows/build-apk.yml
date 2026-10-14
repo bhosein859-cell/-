@@ -113,6 +113,10 @@ jobs:
               MSG=$(tr '\n' '~' < "$c")
               echo "::error title=انتهای لاگ ساخت ($m)::${MSG}"
             done
+            grep -n "\[ci-patch\]" build.log | tail -n 30 | sed -e 's/%/%25/g' > initlog.txt
+            if [ -s initlog.txt ]; then
+              echo "::notice title=ci-patch::$(tr '\n' '~' < initlog.txt)"
+            fi
             echo "### خطوط خطای build.log" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             head -n 120 builderr.txt >> $GITHUB_STEP_SUMMARY
