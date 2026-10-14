@@ -102,6 +102,17 @@ jobs:
               MSG=$(tr '\n' '~' < "$c")
               echo "::error title=خطای ساخت APK ($n)::${MSG}"
             done
+            # انتهای لاگ گِردل (جایی که «What went wrong» می‌آید)
+            tail -c 20000 build.log | sed -e 's/%/%25/g' > tailerr.txt
+            rm -f tchunk_*
+            [ -s tailerr.txt ] && split -b 4000 -d -a 1 tailerr.txt tchunk_
+            m=0
+            for c in tchunk_*; do
+              [ -f "$c" ] || continue
+              m=$((m+1))
+              MSG=$(tr '\n' '~' < "$c")
+              echo "::error title=انتهای لاگ ساخت ($m)::${MSG}"
+            done
             echo "### خطوط خطای build.log" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             head -n 120 builderr.txt >> $GITHUB_STEP_SUMMARY
