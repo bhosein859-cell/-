@@ -79,7 +79,8 @@ class DocxBuilder {
       sb.write('<w:tr>');
       for (var c = 0; c < cols; c++) {
         final cell = c < rows[r].length ? rows[r][c] : '';
-        sb.write('<w:tc><w:tcPr><w:tcW w:w="$colW" w:type="dxa"/>')
+        sb
+          ..write('<w:tc><w:tcPr><w:tcW w:w="$colW" w:type="dxa"/>')
           ..write(r == 0 ? '<w:shd w:val="clear" w:color="auto" w:fill="1E3A8A"/>' : '')
           ..write('</w:tcPr><w:p><w:pPr><w:bidi/></w:pPr>')
           ..write(_run(cell,

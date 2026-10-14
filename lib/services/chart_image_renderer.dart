@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart' show vg;
+
 
 /// رندر آفلاینِ ویجت‌های برداری (CustomPainter / SVG) به PNG باکیفیت —
 /// برای جاسازی نمودارها در گزارش Word بدون هیچ سرویس خارجی.
@@ -29,21 +29,32 @@ class ChartImageRenderer {
     return data!.buffer.asUint8List();
   }
 
-  /// رندر لوگوی SVG گره‌گشا به PNG (برای صفحه‌ی عنوان گزارش).
+  /// رندر لوگوی گره‌گشا به PNG (برای صفحه‌ی عنوان گزارش).
+  /// از لوگوی PNG همراه برنامه استفاده می‌کند تا وابسته به API کتابخانه‌ی
+  /// برداری (SVG) نباشد؛ خود نمایش درون‌برنامه‌ای همچنان SVG است.
   static Future<Uint8List> renderLogoPng({double size = 512}) async {
-    final svgText = await rootBundle.loadString('assets/images/logo.svg');
-    final info = await vg.loadPicture(SvgStringLoader(svgText), null);
+    final asset = await rootBundle.load('assets/images/logo.png');
+    final target = size.round().clamp(16, 4096);
+    final codec = await ui.instantiateImageCodec(
+      asset.buffer.asUint8List(),
+      targetWidth: target,
+    );
+    final frame = await codec.getNextFrame();
+    final image = frame.image;
+    codec.dispose();
+
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
-    canvas.drawRect(Rect.fromLTWH(0, 0, size, size), Paint()..color = const Color(0xFFFFFFFF));
-    final scale = size / info.size.width;
-    canvas.scale(scale);
-    canvas.drawPicture(info.picture);
+    final w = image.width.toDouble();
+    final h = image.height.toDouble();
+    canvas.drawRect(Rect.fromLTWH(0, 0, w, h), Paint()..color = const Color(0xFFFFFFFF));
+    canvas.drawImage(image, Offset.zero, Paint());
     final picture = recorder.endRecording();
-    final image = await picture.toImage(size.round() * 2, size.round() * 2);
-    final data = await image.toByteData(format: ui.ImageByteFormat.png);
+    final out = await picture.toImage(image.width, image.height);
+    final data = await out.toByteData(format: ui.ImageByteFormat.png);
     picture.dispose();
     image.dispose();
+    out.dispose();
     return data!.buffer.asUint8List();
   }
 }

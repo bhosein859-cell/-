@@ -44,8 +44,13 @@ jobs:
         run: |
           set +e
           flutter analyze --no-fatal-infos > analyze.log 2>&1
-          echo "exit=$?"
-          tail -n 40 analyze.log >> $GITHUB_STEP_SUMMARY
+          echo "analyze_exit=$?"
+          echo "### flutter analyze" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          grep -E "^\s+(error|warning) " analyze.log | head -n 200 >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          MSG=$(grep -E "^\s+error " analyze.log | sed -e 's/%/%25/g' | tail -n 300 | cut -c1-50000 | tr '\n' '~' )
+          echo "::warning title=تحلیل ایستا (خطاها)::${MSG}"
 
       - name: ساخت آیکون اپ
         run: dart run flutter_launcher_icons
@@ -66,29 +71,16 @@ jobs:
             tail -n 80 "$f" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           done
-          if [ -f build.log ]; then
-            MSG=$(tail -n 80 build.log | sed -e 's/%/%25/g' -e ':a;N;$!ba;s/\n/%0A/g' | cut -c1-20000)
-            echo "::error title=خطای ساخت APK::${MSG}"
+          echo "### نسخه‌های کتابخانه‌های کلیدی" >> $GITHUB_STEP_SUMMARY
+          grep -E "^  (fl_chart|flutter_svg|vector_graphics|excel|pdf|archive|file_picker|speech_to_text|flutter_local_notifications|image_picker|share_plus|qr_flutter|encrypt|package_info_plus|shared_preferences|sqflite|intl|path_provider|flutter_riverpod):" -A1 pubspec.lock >> $GITHUB_STEP_SUMMARY || true
+          if [ -f pubspec.lock ]; then
+            DEPS=$(grep -E "^  (fl_chart|flutter_svg|vector_graphics):" -A2 pubspec.lock | grep -E "version|fl_chart|flutter_svg|vector_graphics" | tr '\n' ' ')
+            echo "::notice title=نسخه‌ها::${DEPS}"
           fi
           if [ -f build.log ]; then
-            python3 - <<'PY' || true
-          import json, os, urllib.request
-          body = "```\n" + "\n".join(open("build.log", encoding="utf-8", errors="replace").read().splitlines()[-400:]) + "\n```"
-          body = body[:65000]
-          req = urllib.request.Request(
-              f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/commits/{os.environ['GITHUB_SHA']}/comments",
-              data=json.dumps({"body": body}).encode(),
-              headers={
-                  "Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
-                  "Accept": "application/vnd.github+json",
-                  "Content-Type": "application/json",
-                  "User-Agent": "ci",
-              },
-              method="POST",
-          )
-          with urllib.request.urlopen(req) as r:
-              print("commit comment:", r.status)
-          PY
+            # کل بخش خطاهای کامپایلر (انتهای لاگ) را گزارش کن
+            MSG=$(tail -c 55000 build.log | sed -e 's/%/%25/g' -e ':a;N;$!ba;s/\n/%0A/g')
+            echo "::error title=خطای ساخت APK::${MSG}"
           fi
 
       - name: تغییر نام خروجی

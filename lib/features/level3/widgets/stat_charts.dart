@@ -307,12 +307,39 @@ class _StatAnalysisPanelState extends ConsumerState<StatAnalysisPanel> {
           ),
         ],
         extraLinesData: ExtraLinesData(horizontalLines: [
-          HorizontalLine(y: ucl, color: AppColors.level3, strokeWidth: 1.5, dashArray: [6, 4],
-              label: HorizontalLineLabel(text: 'UCL', style: const TextStyle(fontSize: 10, color: AppColors.level3))),
-          HorizontalLine(y: cl, color: AppColors.success, strokeWidth: 1.5, dashArray: [6, 4],
-              label: HorizontalLineLabel(text: 'CL', style: const TextStyle(fontSize: 10, color: AppColors.success))),
-          HorizontalLine(y: lcl, color: AppColors.level3, strokeWidth: 1.5, dashArray: [6, 4],
-              label: HorizontalLineLabel(text: 'LCL', style: const TextStyle(fontSize: 10, color: AppColors.level3))),
+          HorizontalLine(
+              y: ucl,
+              color: AppColors.level3,
+              strokeWidth: 1.5,
+              dashArray: [6, 4],
+              label: HorizontalLineLabel(
+                  show: true,
+                  alignment: Alignment.topLeft,
+                  labelResolver: (line) => 'UCL',
+                  style: const TextStyle(
+                      fontFamily: 'Vazirmatn', fontSize: 10, color: AppColors.level3))),
+          HorizontalLine(
+              y: cl,
+              color: AppColors.success,
+              strokeWidth: 1.5,
+              dashArray: [6, 4],
+              label: HorizontalLineLabel(
+                  show: true,
+                  alignment: Alignment.topLeft,
+                  labelResolver: (line) => 'CL',
+                  style: const TextStyle(
+                      fontFamily: 'Vazirmatn', fontSize: 10, color: AppColors.success))),
+          HorizontalLine(
+              y: lcl,
+              color: AppColors.level3,
+              strokeWidth: 1.5,
+              dashArray: [6, 4],
+              label: HorizontalLineLabel(
+                  show: true,
+                  alignment: Alignment.topLeft,
+                  labelResolver: (line) => 'LCL',
+                  style: const TextStyle(
+                      fontFamily: 'Vazirmatn', fontSize: 10, color: AppColors.level3))),
         ]),
         lineTouchData: LineTouchData(
           getTouchedSpotIndicator: (bar, spots) => [
@@ -351,7 +378,10 @@ class _StatAnalysisPanelState extends ConsumerState<StatAnalysisPanel> {
             scatterSpots: [
               for (var i = 0; i < n; i++)
                 ScatterSpot(x[i], y[i],
-                    radius: 5, color: AppColors.navyBlue),
+                    dotPainter: FlDotCirclePainter(
+                        radius: 5,
+                        color: AppColors.navyBlue,
+                        strokeWidth: 0)),
             ],
             scatterTouchData: ScatterTouchData(
               touchTooltipData: ScatterTouchTooltipData(
@@ -364,8 +394,12 @@ class _StatAnalysisPanelState extends ConsumerState<StatAnalysisPanel> {
             titlesData: const FlTitlesData(show: false),
             borderData: FlBorderData(show: false),
             gridData: FlGridData(
-              getDrawingHorizontalLine: (v) => BorderSide(color: AppColors.navyBlue.withValues(alpha: .1)),
-              getDrawingVerticalLine: (v) => BorderSide(color: AppColors.navyBlue.withValues(alpha: .1)),
+              getDrawingHorizontalLine: (v) => FlLine(
+                  color: AppColors.navyBlue.withValues(alpha: .1),
+                  strokeWidth: .5),
+              getDrawingVerticalLine: (v) => FlLine(
+                  color: AppColors.navyBlue.withValues(alpha: .1),
+                  strokeWidth: .5),
             ),
           ),
         ),
